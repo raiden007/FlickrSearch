@@ -55,4 +55,51 @@ extension FlickrPhotosViewController : UITextFieldDelegate {
     }
 }
 
+extension FlickrPhotosViewController {
+    
+    //1
+    override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+        return searches.count
+    }
+    
+    //2
+    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return searches[section].searchResults.count
+    }
+    
+    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        //1
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! FlickrPhotoCell
+        //2
+        let flickrPhoto = photoForIndexPath(indexPath)
+        cell.backgroundColor = UIColor.blackColor()
+        //3
+        cell.imageView.image = flickrPhoto.thumbnail
+        
+        return cell
+    }
+}
 
+extension FlickrPhotosViewController : UICollectionViewDelegateFlowLayout {
+    //1
+    func collectionView(collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+            
+            let flickrPhoto =  photoForIndexPath(indexPath)
+            //2
+            if var size = flickrPhoto.thumbnail?.size {
+                size.width += 10
+                size.height += 10
+                return size
+            }
+            return CGSize(width: 100, height: 100)
+    }
+    
+    //3
+    func collectionView(collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+            return sectionInsets
+    }
+}
